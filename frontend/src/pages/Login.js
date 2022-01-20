@@ -3,13 +3,13 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import Button from "@mui/material/Button";
-import GoogleIcon from "@mui/icons-material/Google";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/system/Box";
 import Link from "@mui/material/Link";
 import Divider from "@mui/material/Divider";
+import GoogleOAuth from "../components/GoogleOAuth";
 
 // start with empty fields
 const INITIAL_FORM_DATA = {
@@ -108,11 +108,7 @@ function Login() {
           {"Don't have an account? Sign Up"}
         </Link>
         <Divider sx={{ mt: 4 }}>Or sign in with</Divider>
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-          <Button variant="contained" size="large" startIcon={<GoogleIcon />}>
-            Google Account
-          </Button>
-        </Box>
+        <GoogleOAuth />
       </Box>
     </Container>
   );
