@@ -3,6 +3,8 @@ import { useState } from "react";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase/firebase.config";
+import { toast } from "react-toastify";
+import formatAlert from "../utils/formatAlert";
 
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -47,9 +49,8 @@ const Registration = () => {
         email,
         password
       );
-
+      // get user details
       const user = userCredential.user;
-      console.log(user);
 
       // copy data inside 'form'
       const formDataCopy = { ...form };
@@ -63,8 +64,10 @@ const Registration = () => {
 
       // redirect user to '/home'
       navigate("/home");
-    } catch (error) {
-      console.log(error);
+      toast.success("Account has successfully been created!");
+    } catch (e) {
+      const message = formatAlert(e.code);
+      toast.error(`${message}!`);
     }
   };
 

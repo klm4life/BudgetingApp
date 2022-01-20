@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { toast } from "react-toastify";
+import formatAlert from "../utils/formatAlert";
+import GoogleOAuth from "../components/GoogleOAuth";
 
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -9,7 +12,6 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/system/Box";
 import Link from "@mui/material/Link";
 import Divider from "@mui/material/Divider";
-import GoogleOAuth from "../components/GoogleOAuth";
 
 // start with empty fields
 const INITIAL_FORM_DATA = {
@@ -46,6 +48,7 @@ function Login() {
         email,
         password
       );
+      toast.success("You have successfully logged in!");
 
       // NOTE: won't reach here if login failed
       // if user exists, navigate to '/home'
@@ -53,7 +56,8 @@ function Login() {
         navigate("/home");
       }
     } catch (e) {
-      console.log(e);
+      const message = formatAlert(e.code);
+      toast.error(`${message}!`);
     }
   };
 
