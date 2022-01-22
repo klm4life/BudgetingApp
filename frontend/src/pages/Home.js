@@ -22,6 +22,7 @@ import Navbar from "../components/Navbar";
 
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import Stats from "../components/Stats";
 
 const INITIAL_FORM_VALUE = { name: "", amount: "" };
 
@@ -120,6 +121,7 @@ function Home() {
       // add some data in addition to the budgetForm
       const formDataCopy = {
         ...budgetForm,
+        amount: parseInt(budgetForm.amount),
         timestamp: serverTimestamp(),
         userRef: user.uid,
       };
@@ -264,6 +266,7 @@ function Home() {
     <>
       <Navbar />
       <Container>
+        <Stats budgets={budgets} expenses={expenses} />
         <Button size="large" variant="contained" onClick={toggleBudgetDialog}>
           ADD BUDGET
         </Button>
