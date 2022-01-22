@@ -264,7 +264,7 @@ function Home() {
   };
 
   const viewDetails = () => {
-    // show in new model 
+    // show in new model
     // show all expenses
     // all expenses have name and amount
     // iterate through each item in expenses array and then display each item's name and amount
@@ -308,10 +308,7 @@ function Home() {
           handleExpenseOnChange={handleExpenseOnChange}
           submitExpense={submitExpense}
         />
-        <Details 
-          details={details}
-          toggleDetails={toggleDetails}
-        />
+        <Details details={details} toggleDetails={toggleDetails} />
       </Container>
     </>
   );

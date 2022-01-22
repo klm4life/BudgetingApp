@@ -1,10 +1,12 @@
+import { useState, useEffect } from "react";
+
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import LinearProgress from "@mui/material/LinearProgress";
-import { useState, useEffect } from "react";
+import Box from "@mui/system/Box";
 
 function BudgetCard({
   amount,
@@ -16,6 +18,34 @@ function BudgetCard({
   viewDetails,
 }) {
   const [expensesAmount, setExpensesAmount] = useState(0);
+
+  const styles = {
+    cardContainer: {
+      borderRadius: "16px",
+      transform: "rotate(-2deg)",
+      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;",
+      transition: "all 150ms ease-in-out",
+      "&:hover": {
+        transform: "scale(1.05)",
+        boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;",
+      },
+    },
+    cardTitle: {
+      marginBottom: "1.5em",
+      fontSize: "1rem",
+      fontWeight: "500",
+    },
+    cardTop: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+    },
+    linearProgress: {
+      height: "17px",
+      borderRadius: "20px",
+      backgroundColor: expensesAmount >= amount ? "#d32f2f" : "",
+    },
+  };
 
   useEffect(() => {
     const calculateExpensesAmount = () => {
@@ -38,46 +68,38 @@ function BudgetCard({
   const normalise = (value, MAX) => ((value - 0) * 100) / (MAX - 0);
 
   return (
-    <>
-      <Card>
-        <CardContent>
-          <div className="budget-card__top">
-            <Typography
-              sx={{ marginBottom: "0.7em" }}
-              variant="h5"
-              component="div"
-            >
-              {name.toUpperCase()}
-            </Typography>
-            <Typography>
-              ${expensesAmount} / ${amount}
-            </Typography>
-          </div>
-          <LinearProgress
-            sx={{
-              height: "15px",
-              borderRadius: "20px",
-              backgroundColor: expensesAmount >= amount ? "#d32f2f" : "",
-            }}
-            variant="determinate"
-            color={`${expensesAmount >= amount ? "error" : "primary"}`}
-            value={normalise(expensesAmount, amount)}
-          />
-        </CardContent>
-        <CardActions>
-          <Button size="small" onClick={() => openAddExpenseDialog(name, id)}>
-            Add Expense
-          </Button>
-          <Button size="small" onClick={() => removeBudget(id)}>
-            Remove
-          </Button>
-          <Button size="small" onClick={() => viewDetails(name, id)}>  
+    <Card sx={{ ...styles.cardContainer }}>
+      <CardContent>
+        <Box sx={{ ...styles.cardTop }}>
+          <Typography sx={{ ...styles.cardTitle }} variant="h5">
+            {name.toUpperCase()}
+          </Typography>
+          <Typography>
+            ${expensesAmount} / ${amount}
+          </Typography>
+        </Box>
+        <LinearProgress
+          sx={{
+            ...styles.linearProgress,
+          }}
+          variant="determinate"
+          color={`${expensesAmount >= amount ? "error" : "primary"}`}
+          value={normalise(expensesAmount, amount)}
+        />
+      </CardContent>
+      <CardActions>
+        <Button size="small" onClick={() => openAddExpenseDialog(name, id)}>
+          Add Expense
+        </Button>
+        <Button size="small" onClick={() => removeBudget(id)}>
+          Remove
+        </Button>
+        <Button size="small" onClick={() => viewDetails(name, id)}>
           {/* need to implement viewDetails method */}
-            View Details 
-            </Button>
-        </CardActions>
-      </Card>
-    </>
+          View Details
+        </Button>
+      </CardActions>
+    </Card>
   );
 }
 

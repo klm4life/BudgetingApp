@@ -6,17 +6,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContentText from "@mui/material/DialogContentText";
 
-
-function Details ({
-    expenses,
-    details, 
-    toggleDetails
-}) {
-    return (
-        <Dialog open={details} onClose={toggleDetails}>
-            {expenses.map(expense)}
-        </Dialog>
-    )
+function Details({ expenses, details, toggleDetails }) {
+  return (
+    <Dialog open={details} onClose={toggleDetails}>
+      {/* display expenses here */}
+    </Dialog>
+  );
 }
 
-export default Details
+export default Details;
