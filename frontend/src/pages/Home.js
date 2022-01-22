@@ -18,6 +18,7 @@ import AddBudget from "../components/AddBudget";
 import Spinner from "../components/Spinner";
 import BudgetList from "../components/BudgetList";
 import AddExpense from "../components/AddExpense";
+import Navbar from "../components/Navbar";
 
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -260,33 +261,36 @@ function Home() {
   }
 
   return (
-    <Container>
-      <Button size="large" variant="contained" onClick={toggleBudgetDialog}>
-        ADD BUDGET
-      </Button>
-      <AddBudget
-        {...budgetForm}
-        budgetDialogOpen={budgetDialogOpen}
-        toggleBudgetDialog={toggleBudgetDialog}
-        submitBudget={submitBudget}
-        handleBudgetOnChange={handleBudgetOnChange}
-      />
-      <BudgetList
-        budgets={budgets}
-        expenses={expenses}
-        openAddExpenseDialog={openAddExpenseDialog}
-        removeBudget={removeBudget}
-      />
+    <>
+      <Navbar />
+      <Container>
+        <Button size="large" variant="contained" onClick={toggleBudgetDialog}>
+          ADD BUDGET
+        </Button>
+        <AddBudget
+          {...budgetForm}
+          budgetDialogOpen={budgetDialogOpen}
+          toggleBudgetDialog={toggleBudgetDialog}
+          submitBudget={submitBudget}
+          handleBudgetOnChange={handleBudgetOnChange}
+        />
+        <BudgetList
+          budgets={budgets}
+          expenses={expenses}
+          openAddExpenseDialog={openAddExpenseDialog}
+          removeBudget={removeBudget}
+        />
 
-      <AddExpense
-        {...expenseForm}
-        {...currentBudgetInfo}
-        expenseDialogOpen={expenseDialogOpen}
-        toggleExpenseDialog={toggleExpenseDialog}
-        handleExpenseOnChange={handleExpenseOnChange}
-        submitExpense={submitExpense}
-      />
-    </Container>
+        <AddExpense
+          {...expenseForm}
+          {...currentBudgetInfo}
+          expenseDialogOpen={expenseDialogOpen}
+          toggleExpenseDialog={toggleExpenseDialog}
+          handleExpenseOnChange={handleExpenseOnChange}
+          submitExpense={submitExpense}
+        />
+      </Container>
+    </>
   );
 }
 
