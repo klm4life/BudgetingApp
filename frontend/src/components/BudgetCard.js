@@ -13,6 +13,7 @@ function BudgetCard({
   expenses,
   openAddExpenseDialog,
   removeBudget,
+  viewDetails,
 }) {
   const [expensesAmount, setExpensesAmount] = useState(0);
 
@@ -70,7 +71,9 @@ function BudgetCard({
           <Button size="small" onClick={() => removeBudget(id)}>
             Remove
           </Button>
-          <Button size="small">View Details</Button>
+          <Button size="small" onClick={() => viewDetails(id)}>
+            View Details 
+            </Button>
         </CardActions>
       </Card>
     </>
