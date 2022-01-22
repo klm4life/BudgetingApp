@@ -2,11 +2,14 @@ import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import {
   collection,
+  doc,
   query,
   where,
   getDocs,
   addDoc,
   serverTimestamp,
+  deleteDoc,
+  writeBatch,
 } from "firebase/firestore";
 import { useAuthStatus } from "../hooks/useAuthStatus";
 import { db } from "../firebase/firebase.config";
@@ -148,7 +151,7 @@ function Home() {
     e.preventDefault();
 
     const user = auth.currentUser;
-    setLoading(true);
+
     try {
       const formDataCopy = {
         ...expenseForm,
@@ -176,11 +179,47 @@ function Home() {
       setExpenseForm(INITIAL_FORM_VALUE);
       // close expense dialog
       setExpenseDialogOpen(false);
-      setLoading(false);
 
       toast.success("New expense has successfully been added!");
     } catch (error) {
       toast.error("Failed to add new expense");
+    }
+  };
+
+  const removeBudget = async (budgetId) => {
+    const batch = writeBatch(db);
+
+    setLoading(true);
+    try {
+      // query to get all expenses associated with the clicked budget
+      const q = query(
+        collection(db, "expenses"),
+        where("budgetRef", "==", budgetId)
+      );
+
+      const querySnapshot = await getDocs(q);
+      // delete all expenses related to clicked budget
+      querySnapshot.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      batch.commit();
+
+      // delete budget
+      await deleteDoc(doc(db, "budgets", budgetId));
+
+      setBudgets((currentState) => {
+        const updatedBudgets = currentState.filter(
+          (budget) => budget.id !== budgetId
+        );
+
+        return updatedBudgets;
+      });
+      setLoading(false);
+
+      toast.success("Budget has successfully been deleted!");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to delete budget!");
     }
   };
 
@@ -236,6 +275,7 @@ function Home() {
         budgets={budgets}
         expenses={expenses}
         openAddExpenseDialog={openAddExpenseDialog}
+        removeBudget={removeBudget}
       />
 
       <AddExpense

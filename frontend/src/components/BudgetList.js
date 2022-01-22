@@ -4,13 +4,13 @@ import BudgetCard from "./BudgetCard";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/system/Box";
 
-function BudgetList({ budgets, expenses, openAddExpenseDialog }) {
+function BudgetList({ budgets, expenses, openAddExpenseDialog, removeBudget }) {
   return (
     <Box className="budget__list">
       <Typography sx={{ mb: "1em" }} className="budget__title" variant="h4">
         This Month's Budget List
       </Typography>
-      {budgets.length > 1 ? (
+      {budgets.length > 0 ? (
         <Box className="budget__list-content">
           {budgets.map((budget) => {
             return (
@@ -20,6 +20,7 @@ function BudgetList({ budgets, expenses, openAddExpenseDialog }) {
                 id={budget.id}
                 expenses={expenses}
                 openAddExpenseDialog={openAddExpenseDialog}
+                removeBudget={removeBudget}
               />
             );
           })}

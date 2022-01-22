@@ -6,7 +6,14 @@ import Typography from "@mui/material/Typography";
 import LinearProgress from "@mui/material/LinearProgress";
 import { useState, useEffect } from "react";
 
-function BudgetCard({ amount, name, id, expenses, openAddExpenseDialog }) {
+function BudgetCard({
+  amount,
+  name,
+  id,
+  expenses,
+  openAddExpenseDialog,
+  removeBudget,
+}) {
   const [expensesAmount, setExpensesAmount] = useState(0);
 
   useEffect(() => {
@@ -46,7 +53,11 @@ function BudgetCard({ amount, name, id, expenses, openAddExpenseDialog }) {
             </Typography>
           </div>
           <LinearProgress
-            sx={{ height: "15px", borderRadius: "20px" }}
+            sx={{
+              height: "15px",
+              borderRadius: "20px",
+              backgroundColor: expensesAmount >= amount ? "#d32f2f" : "",
+            }}
             variant="determinate"
             color={`${expensesAmount >= amount ? "error" : "primary"}`}
             value={normalise(expensesAmount, amount)}
@@ -56,7 +67,9 @@ function BudgetCard({ amount, name, id, expenses, openAddExpenseDialog }) {
           <Button size="small" onClick={() => openAddExpenseDialog(name, id)}>
             Add Expense
           </Button>
-          <Button size="small">Remove</Button>
+          <Button size="small" onClick={() => removeBudget(id)}>
+            Remove
+          </Button>
           <Button size="small">View Details</Button>
         </CardActions>
       </Card>
