@@ -9,5 +9,24 @@
 }
 
 body {
+  background-color: rgb(240, 242, 245);
   font-family: "Roboto", sans-serif;
+}
+
+/* BUDGET STYLES */
+
+.budget__list {
+  margin: 4em 0;
+}
+
+.budget__list-content {
+  display: grid;
+  gap: 2em;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.budget-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }

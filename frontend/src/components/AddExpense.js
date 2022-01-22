@@ -6,22 +6,27 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContentText from "@mui/material/DialogContentText";
 
-function AddBudget({
+function AddExpense({
   name,
   amount,
-  budgetDialogOpen,
-  toggleBudgetDialog,
-  submitBudget,
-  handleBudgetOnChange,
+  budgetName,
+  expenseDialogOpen,
+  toggleExpenseDialog,
+  handleExpenseOnChange,
+  submitExpense,
 }) {
   return (
-    <Dialog open={budgetDialogOpen} onClose={toggleBudgetDialog}>
-      <form onSubmit={submitBudget}>
-        <DialogTitle>Add New Budget</DialogTitle>
+    <Dialog open={expenseDialogOpen} onClose={toggleExpenseDialog}>
+      <form onSubmit={submitExpense}>
+        <header className="expense-dialog__header">
+          <DialogTitle sx={{ fontSize: "1.7rem" }}>
+            {budgetName.toUpperCase()}
+          </DialogTitle>
+        </header>
         <DialogContent>
           <DialogContentText>
-            To add your budget information, please enter the name and amount
-            below. (e.g. rent, groceries, savings, etc.)
+            Please add your expense for the budget below. The expenses comprise
+            of specific items under the associated budget.
           </DialogContentText>
           <TextField
             autoFocus
@@ -33,7 +38,7 @@ function AddBudget({
             variant="standard"
             required
             value={name}
-            onChange={handleBudgetOnChange}
+            onChange={handleExpenseOnChange}
           />
         </DialogContent>
         <DialogContent>
@@ -46,11 +51,11 @@ function AddBudget({
             variant="standard"
             required
             value={amount}
-            onChange={handleBudgetOnChange}
+            onChange={handleExpenseOnChange}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={toggleBudgetDialog}>Cancel</Button>
+          <Button onClick={toggleExpenseDialog}>Cancel</Button>
           <Button type="submit">Confirm</Button>
         </DialogActions>
       </form>
@@ -58,4 +63,4 @@ function AddBudget({
   );
 }
 
-export default AddBudget;
+export default AddExpense;

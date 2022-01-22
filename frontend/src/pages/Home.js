@@ -13,39 +13,57 @@ import { db } from "../firebase/firebase.config";
 import { toast } from "react-toastify";
 import AddBudget from "../components/AddBudget";
 import Spinner from "../components/Spinner";
+import BudgetList from "../components/BudgetList";
+import AddExpense from "../components/AddExpense";
 
 import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
 
 const INITIAL_FORM_VALUE = { name: "", amount: "" };
 
 function Home() {
   const [budgetForm, setBudgetForm] = useState(INITIAL_FORM_VALUE);
+  const [expenseForm, setExpenseForm] = useState(INITIAL_FORM_VALUE);
   const [budgets, setBudgets] = useState([]);
+  const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [budgetDialogOpen, setBudgetDialogOpen] = useState(false);
+  const [expenseDialogOpen, setExpenseDialogOpen] = useState(false);
+  const [currentBudgetInfo, setCurrentBudgetInfo] = useState({
+    budgetName: "",
+    budgetId: "",
+  });
 
   const { checkingStatus } = useAuthStatus();
   const auth = getAuth();
 
   useEffect(() => {
-    // get the budgets created on this month
-    const getBudgets = async () => {
+    // get the budgets and expenses created on this month
+    const getBudgetsAndExpenses = async () => {
       const user = auth.currentUser;
 
       if (user) {
         // get budgets created by the current signed-in user
-        const q = query(
+        const budgetQuery = query(
           collection(db, "budgets"),
           where("userRef", "==", user.uid)
         );
-        const querySnapshot = await getDocs(q);
 
+        const expenseQuery = query(
+          collection(db, "expenses"),
+          where("userRef", "==", user.uid)
+        );
+
+        const budgetSnapshot = await getDocs(budgetQuery);
+        const expenseSnapshot = await getDocs(expenseQuery);
+
+        // get current month & year
+        const currentMonth = new Date().getUTCMonth();
+        const currentYear = new Date().getUTCFullYear();
+
+        // BUDGETS
         const budgets = [];
-        querySnapshot.forEach((doc) => {
-          // get current month & year
-          const currentMonth = new Date().getUTCMonth();
-          const currentYear = new Date().getUTCFullYear();
-
+        budgetSnapshot.forEach((doc) => {
           // get creation date for each budget
           const docDate = new Date(doc.data().timestamp.seconds * 1000);
 
@@ -61,12 +79,31 @@ function Home() {
           }
         });
 
+        // EXPENSES
+        const expenses = [];
+        expenseSnapshot.forEach((doc) => {
+          // get creation date for each budget
+          const docDate = new Date(doc.data().timestamp.seconds * 1000);
+
+          // get only the expenses created in current month
+          if (
+            currentMonth === docDate.getUTCMonth() &&
+            currentYear === docDate.getUTCFullYear()
+          ) {
+            return expenses.push({
+              id: doc.id,
+              data: doc.data(),
+            });
+          }
+        });
+
         setBudgets(budgets);
+        setExpenses(expenses);
         setLoading(false);
       }
     };
 
-    getBudgets();
+    getBudgetsAndExpenses();
   }, [auth.currentUser]);
 
   // add new budgets
@@ -103,21 +140,79 @@ function Home() {
 
       toast.success("New budget has successfully been added!");
     } catch (error) {
-      console.log(error);
-      toast.error("Failed to add budget information!");
+      toast.error("Failed to add new budget information!");
+    }
+  };
+
+  const submitExpense = async (e) => {
+    e.preventDefault();
+
+    const user = auth.currentUser;
+    setLoading(true);
+    try {
+      const formDataCopy = {
+        ...expenseForm,
+        amount: parseInt(expenseForm.amount),
+        type: currentBudgetInfo.budgetName,
+        timestamp: serverTimestamp(),
+        budgetRef: currentBudgetInfo.budgetId,
+        userRef: user.uid,
+      };
+
+      // add new expenses data to firestore database
+      const expenseRef = await addDoc(collection(db, "expenses"), formDataCopy);
+
+      const newExpense = {
+        id: expenseRef.id,
+        data: formDataCopy,
+      };
+
+      // add new expenses
+      setExpenses((currentState) => {
+        return [...currentState, newExpense];
+      });
+
+      // clear input fields
+      setExpenseForm(INITIAL_FORM_VALUE);
+      // close expense dialog
+      setExpenseDialogOpen(false);
+      setLoading(false);
+
+      toast.success("New expense has successfully been added!");
+    } catch (error) {
+      toast.error("Failed to add new expense");
     }
   };
 
   // handle input changes
-  const handleOnChange = (e) => {
+  const handleBudgetOnChange = (e) => {
     setBudgetForm((currentState) => {
       return { ...currentState, [e.target.id]: e.target.value };
     });
   };
 
-  // open/close dialog
+  // handle input changes
+  const handleExpenseOnChange = (e) => {
+    setExpenseForm((currentState) => {
+      return { ...currentState, [e.target.id]: e.target.value };
+    });
+  };
+
+  // open/close budget dialog
   const toggleBudgetDialog = () => {
     setBudgetDialogOpen((currentState) => !currentState);
+    setBudgetForm(INITIAL_FORM_VALUE);
+  };
+
+  // open/close expense dialog
+  const toggleExpenseDialog = () => {
+    setExpenseDialogOpen((currentState) => !currentState);
+    setExpenseForm(INITIAL_FORM_VALUE);
+  };
+
+  const openAddExpenseDialog = (budgetName, budgetId) => {
+    setExpenseDialogOpen(true);
+    setCurrentBudgetInfo({ budgetName, budgetId });
   };
 
   // display loading if true
@@ -126,17 +221,7 @@ function Home() {
   }
 
   return (
-    <>
-      <div>
-        {budgets.map((budget) => {
-          return (
-            <div key={budget.id}>
-              <h2>{budget.data.name}</h2>
-              <p>{budget.data.amount}</p>
-            </div>
-          );
-        })}
-      </div>
+    <Container>
       <Button size="large" variant="contained" onClick={toggleBudgetDialog}>
         ADD BUDGET
       </Button>
@@ -145,9 +230,23 @@ function Home() {
         budgetDialogOpen={budgetDialogOpen}
         toggleBudgetDialog={toggleBudgetDialog}
         submitBudget={submitBudget}
-        handleOnChange={handleOnChange}
+        handleBudgetOnChange={handleBudgetOnChange}
       />
-    </>
+      <BudgetList
+        budgets={budgets}
+        expenses={expenses}
+        openAddExpenseDialog={openAddExpenseDialog}
+      />
+
+      <AddExpense
+        {...expenseForm}
+        {...currentBudgetInfo}
+        expenseDialogOpen={expenseDialogOpen}
+        toggleExpenseDialog={toggleExpenseDialog}
+        handleExpenseOnChange={handleExpenseOnChange}
+        submitExpense={submitExpense}
+      />
+    </Container>
   );
 }
 
