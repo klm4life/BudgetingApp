@@ -19,10 +19,11 @@ import Spinner from "../components/Spinner";
 import BudgetList from "../components/BudgetList";
 import AddExpense from "../components/AddExpense";
 import Navbar from "../components/Navbar";
+import Stats from "../components/Stats";
+import Details from "../components/Details";
 
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Stats from "../components/Stats";
 
 const INITIAL_FORM_VALUE = { name: "", amount: "" };
 
@@ -32,6 +33,7 @@ function Home() {
   const [budgets, setBudgets] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [details, setDetails] = useState(false);
   const [budgetDialogOpen, setBudgetDialogOpen] = useState(false);
   const [expenseDialogOpen, setExpenseDialogOpen] = useState(false);
   const [currentBudgetInfo, setCurrentBudgetInfo] = useState({
@@ -257,6 +259,19 @@ function Home() {
     setCurrentBudgetInfo({ budgetName, budgetId });
   };
 
+  const toggleDetails = () => {
+    setDetails((currentState) => !currentState);
+  };
+
+  const viewDetails = () => {
+    // show in new model 
+    // show all expenses
+    // all expenses have name and amount
+    // iterate through each item in expenses array and then display each item's name and amount
+    setDetails(true);
+    //filter based on budgetID and then map to display the remaining items in expenses array
+  };
+
   // display loading if true
   if (checkingStatus || loading) {
     return <Spinner />;
@@ -282,6 +297,7 @@ function Home() {
           expenses={expenses}
           openAddExpenseDialog={openAddExpenseDialog}
           removeBudget={removeBudget}
+          viewDetails={viewDetails}
         />
 
         <AddExpense
@@ -291,6 +307,10 @@ function Home() {
           toggleExpenseDialog={toggleExpenseDialog}
           handleExpenseOnChange={handleExpenseOnChange}
           submitExpense={submitExpense}
+        />
+        <Details 
+          details={details}
+          toggleDetails={toggleDetails}
         />
       </Container>
     </>

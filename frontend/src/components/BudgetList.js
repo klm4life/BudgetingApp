@@ -2,11 +2,12 @@ import KEKW from "../assets/KEKW.png";
 import BudgetCard from "./BudgetCard";
 import crycat from "../assets/crycat.jpeg";
 import pan from "../assets/pan.png";
+import vtuber from "../assets/vtuber.jpeg";
 
 import Typography from "@mui/material/Typography";
 import Box from "@mui/system/Box";
 
-function BudgetList({ budgets, expenses, openAddExpenseDialog, removeBudget }) {
+function BudgetList({ budgets, expenses, openAddExpenseDialog, removeBudget, viewDetails }) {
   return (
     <Box className="budget__list">
       <Typography sx={{ mb: "1em" }} className="budget__title" variant="h4">
@@ -23,6 +24,7 @@ function BudgetList({ budgets, expenses, openAddExpenseDialog, removeBudget }) {
                 expenses={expenses}
                 openAddExpenseDialog={openAddExpenseDialog}
                 removeBudget={removeBudget}
+                viewDetails={viewDetails}
               />
             );
           })}
@@ -43,6 +45,7 @@ function BudgetList({ budgets, expenses, openAddExpenseDialog, removeBudget }) {
           <img src={KEKW} alt="kekw" width={200} height={200} />
           <img src={crycat} alt="crycat" width={200} height={200}/>
           <img src={pan} alt="pan" width={200} height={200}/>
+          <img src={vtuber} alt="vtuber" width={200} height={200}/>
           </div>
         </Box>
       )}

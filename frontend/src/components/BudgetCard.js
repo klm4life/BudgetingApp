@@ -71,7 +71,8 @@ function BudgetCard({
           <Button size="small" onClick={() => removeBudget(id)}>
             Remove
           </Button>
-          <Button size="small" onClick={() => viewDetails(id)}>
+          <Button size="small" onClick={() => viewDetails(name, id)}>  
+          {/* need to implement viewDetails method */}
             View Details 
             </Button>
         </CardActions>
