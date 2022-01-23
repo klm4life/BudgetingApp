@@ -16,6 +16,13 @@ function Stats({ budgets, expenses }) {
   const { totalBudgets, totalExpenses, budgetLeft } = stats;
 
   const styles = {
+    statsContainer: {
+      mt: "2em",
+      mb: "5em",
+      "@media(min-width: 600px)": {
+        flexWrap: "nowrap",
+      },
+    },
     boxContainer: {
       borderRadius: "16px",
       padding: "25px 0",
@@ -65,7 +72,7 @@ function Stats({ budgets, expenses }) {
   }, [budgets, expenses]);
 
   return (
-    <Grid container gap={2} sx={{ mt: "2em", mb: "5em" }}>
+    <Grid container gap={2} sx={{ ...styles.statsContainer }}>
       <Grid item xs={12} sm={4} sx={{ ...styles.boxContainer }}>
         <Box sx={{ ...styles.iconContainer }}>
           <TimelineIcon fontSize="large" />

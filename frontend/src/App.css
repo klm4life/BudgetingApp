@@ -12,11 +12,3 @@ body {
   background-color: rgb(240, 242, 245);
   font-family: "Roboto", sans-serif;
 }
-
-/* BUDGET STYLES */
-
-@media (min-width: 600px) {
-  .MuiGrid-container {
-    flex-wrap: nowrap !important;
-  }
-}

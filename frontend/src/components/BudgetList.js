@@ -58,12 +58,12 @@ function BudgetList({
           <Typography sx={{ ...styles.emptyBudgetListText }} variant="h4">
             Empty budget list!
           </Typography>
-          <div className="images">
+          <Box sx={{ textAlign: "center" }}>
             <img src={KEKW} alt="kekw" width={200} height={200} />
             <img src={crycat} alt="crycat" width={200} height={200} />
             <img src={pan} alt="pan" width={200} height={200} />
             <img src={vtuber} alt="vtuber" width={200} height={200} />
-          </div>
+          </Box>
         </Box>
       )}
     </Box>

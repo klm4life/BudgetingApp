@@ -36,6 +36,7 @@ function Home() {
   const [details, setDetails] = useState(false);
   const [budgetDialogOpen, setBudgetDialogOpen] = useState(false);
   const [expenseDialogOpen, setExpenseDialogOpen] = useState(false);
+  const [filteredExpenses, setFilteredExpenses] = useState([]);
   const [currentBudgetInfo, setCurrentBudgetInfo] = useState({
     budgetName: "",
     budgetId: "",
@@ -263,13 +264,21 @@ function Home() {
     setDetails((currentState) => !currentState);
   };
 
-  const viewDetails = () => {
+  const viewDetails = (id) => {
     // show in new model
     // show all expenses
     // all expenses have name and amount
     // iterate through each item in expenses array and then display each item's name and amount
     setDetails(true);
     //filter based on budgetID and then map to display the remaining items in expenses array
+    //console.log(expenses[1].data.budgetRef);
+
+    // 1. filter
+    // 2. store it inside filteredExpenses (useState)
+    //console.log(id);
+    const filtered = expenses.filter(item => item.data.budgetRef === id);
+    //console.log(filtered);
+    setFilteredExpenses(filtered);
   };
 
   // display loading if true
@@ -308,8 +317,11 @@ function Home() {
           handleExpenseOnChange={handleExpenseOnChange}
           submitExpense={submitExpense}
         />
-        <Details details={details} toggleDetails={toggleDetails} />
-      </Container>
+        <Details filteredExpenses={filteredExpenses} details={details} toggleDetails={toggleDetails} />
+      </Container>      
+
+
+      
     </>
   );
 }
