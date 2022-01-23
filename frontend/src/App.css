@@ -15,16 +15,6 @@ body {
 
 /* BUDGET STYLES */
 
-.budget__list {
-  margin: 4em 0;
-}
-
-.budget__list-content {
-  display: grid;
-  gap: 2em;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-}
-
 @media (min-width: 600px) {
   .MuiGrid-container {
     flex-wrap: nowrap !important;
