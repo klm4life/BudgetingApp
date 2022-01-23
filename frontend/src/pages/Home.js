@@ -210,7 +210,7 @@ function Home() {
       });
       batch.commit();
 
-      // delete budget
+      // delete budget from firestore
       await deleteDoc(doc(db, "budgets", budgetId));
 
       setBudgets((currentState) => {
@@ -220,6 +220,13 @@ function Home() {
 
         return updatedBudgets;
       });
+
+      setExpenses(currentState => {
+        const updatedExpenses = currentState.filter(expense => expense.data.budgetRef !== budgetId)
+
+        return updatedExpenses
+      })
+
       setLoading(false);
 
       toast.success("Budget has successfully been deleted!");
@@ -264,22 +271,41 @@ function Home() {
     setDetails((currentState) => !currentState);
   };
 
-  const viewDetails = (id) => {
-    // show in new model
+  const viewDetails = (budgetName, budgetId) => {
+    // show in new modal
     // show all expenses
     // all expenses have name and amount
     // iterate through each item in expenses array and then display each item's name and amount
     setDetails(true);
     //filter based on budgetID and then map to display the remaining items in expenses array
-    //console.log(expenses[1].data.budgetRef);
 
     // 1. filter
     // 2. store it inside filteredExpenses (useState)
-    //console.log(id);
-    const filtered = expenses.filter(item => item.data.budgetRef === id);
-    //console.log(filtered);
+    const filtered = expenses.filter(item => item.data.budgetRef === budgetId);
+
     setFilteredExpenses(filtered);
+    setCurrentBudgetInfo({budgetName, budgetId})
   };
+
+  const removeExpense = async (expenseId) => {
+    // remove from expense array
+    // remove from firestore
+    try {
+      await deleteDoc(doc(db, "expenses", expenseId)); //delete specific expense
+      const remainingItems = expenses.filter(item => item.id !== expenseId);
+      setExpenses(remainingItems);
+
+      setFilteredExpenses(currentState => {
+        const filteredItems = currentState.filter(expense => expense.id !== expenseId)
+
+        return filteredItems
+      })
+
+      toast.success('Expense has successfully been deleted!');
+    } catch(e) {
+      toast.error('Could not delete the specified expense!')
+    }
+  }
 
   // display loading if true
   if (checkingStatus || loading) {
@@ -317,11 +343,9 @@ function Home() {
           handleExpenseOnChange={handleExpenseOnChange}
           submitExpense={submitExpense}
         />
-        <Details filteredExpenses={filteredExpenses} details={details} toggleDetails={toggleDetails} />
+        <Details filteredExpenses={filteredExpenses} details={details} toggleDetails={toggleDetails} 
+        currentBudgetInfo={currentBudgetInfo} removeExpense={removeExpense}/>
       </Container>      
-
-
-      
     </>
   );
 }
